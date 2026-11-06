@@ -1,0 +1,155 @@
+---
+title: "Análisis estadístico de cerveza artesanal de maíz morado y quinua"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+execute:
+  warning: false
+  message: false
+  echo: true
+---
+
+# Análisis de diseño experimental
+
+## Base de datos
+
+La base de datos contiene 18 tratamientos, evaluados en tres bloques, con un total de 54 observaciones.
+
+## Identificación de los factores
+
+1. **Factor A: Proporción de maltas**
+   - P1: 40 % de maíz morado y 60 % de quinua.
+   - P2: 60 % de maíz morado y 40 % de quinua.
+
+2. **Factor B: Tiempo de tostado**
+   - T1: 105 minutos.
+   - T2: 115 minutos.
+   - T3: 125 minutos.
+
+3. **Factor C: Temperatura de tostado**
+   - t1: 100 °C.
+   - t2: 110 °C.
+   - t3: 120 °C.
+
+## Diseño experimental
+
+Diseño de Bloques Completos al Azar (DBCA) con arreglo factorial 2 × 3 × 3 y tres bloques.
+
+\[
+Y_{ijkl}=\mu+B_l+A_i+T_j+Temp_k+(A\times T)_{ij}
++(A\times Temp)_{ik}+(T\times Temp)_{jk}
++(A\times T\times Temp)_{ijk}+\varepsilon_{ijkl}
+\]
+
+# Configuración y paquetes
+
+```{r}
+source("https://inkaverse.com/setup.r")
+
+library(googlesheets4)
+library(dplyr)
+library(tidyr)
+library(emmeans)
+library(multcomp)
+library(ggplot2)
+
+gs4_deauth()
+```
+
+# Importación de datos
+
+```{r}
+# Reemplazar el texto entre comillas por el enlace de Google Sheets.
+gs <- "PEGAR_AQUI_EL_LINK_DE_GOOGLE_SHEETS" %>%
+  as_sheets_id()
+
+fb <- gs %>%
+  range_read(
+    ss = .,
+    sheet = "fb",
+    col_types = "c"
+  ) %>%
+  mutate(
+    bloque = as.factor(bloque),
+    tratamiento = as.factor(tratamiento),
+    proporcion = factor(substr(as.character(tratamiento), 1, 2)),
+    tiempo = factor(substr(as.character(tratamiento), 3, 4)),
+    temperatura = factor(substr(as.character(tratamiento), 5, 6)),
+    across(
+      c(grados_brix, pH, densidad, grado_alcoholico, acidez_total),
+      ~ readr::parse_number(as.character(.x))
+    )
+  )
+
+str(fb)
+summary(fb)
+```
+
+# Análisis de varianza y comparación de medias
+
+## 1. Grados Brix
+
+```{r}
+md_brix <- aov(
+  grados_brix ~ bloque + proporcion * tiempo * temperatura,
+  data = fb
+)
+anova(md_brix)
+
+mc_brix <- emmeans(md_brix, ~ proporcion * tiempo * temperatura)
+multcomp::cld(mc_brix, adjust = "tukey", Letters = letters)
+```
+
+## 2. pH
+
+```{r}
+md_ph <- aov(
+  pH ~ bloque + proporcion * tiempo * temperatura,
+  data = fb
+)
+anova(md_ph)
+
+mc_ph <- emmeans(md_ph, ~ proporcion * tiempo * temperatura)
+multcomp::cld(mc_ph, adjust = "tukey", Letters = letters)
+```
+
+## 3. Densidad
+
+```{r}
+md_densidad <- aov(
+  densidad ~ bloque + proporcion * tiempo * temperatura,
+  data = fb
+)
+anova(md_densidad)
+
+mc_densidad <- emmeans(md_densidad, ~ proporcion * tiempo * temperatura)
+multcomp::cld(mc_densidad, adjust = "tukey", Letters = letters)
+```
+
+## 4. Grado alcohólico
+
+```{r}
+md_alcohol <- aov(
+  grado_alcoholico ~ bloque + proporcion * tiempo * temperatura,
+  data = fb
+)
+anova(md_alcohol)
+
+mc_alcohol <- emmeans(md_alcohol, ~ proporcion * tiempo * temperatura)
+multcomp::cld(mc_alcohol, adjust = "tukey", Letters = letters)
+```
+
+## 5. Acidez total
+
+```{r}
+md_acidez <- aov(
+  acidez_total ~ bloque + proporcion * tiempo * temperatura,
+  data = fb
+)
+anova(md_acidez)
+
+mc_acidez <- emmeans(md_acidez, ~ proporcion * tiempo * temperatura)
+multcomp::cld(mc_acidez, adjust = "tukey", Letters = letters)
+```
