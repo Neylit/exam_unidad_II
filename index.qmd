@@ -62,7 +62,7 @@ gs4_deauth()
 
 ```{r}
 # Reemplazar el texto entre comillas por el enlace de Google Sheets.
-gs <- "PEGAR_AQUI_EL_LINK_DE_GOOGLE_SHEETS" %>%
+gs <- "https://docs.google.com/spreadsheets/d/1Ghnx_ZC7K33HhyMXbC6sK0W6s1_27C13o-F9-NmGItw/edit?gid=0#gid=0" %>%
   as_sheets_id()
 
 fb <- gs %>%
