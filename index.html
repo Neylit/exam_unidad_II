@@ -73,6 +73,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="index_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="index_files/libs/bootstrap/bootstrap-efbb37e9afcc02144ebbc7afd12a776f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -95,10 +124,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#análisis-de-varianza-y-comparación-de-medias" id="toc-análisis-de-varianza-y-comparación-de-medias" class="nav-link" data-scroll-target="#análisis-de-varianza-y-comparación-de-medias"><span class="header-section-number">4</span> Análisis de varianza y comparación de medias</a>
   <ul class="collapse">
   <li><a href="#grados-brix" id="toc-grados-brix" class="nav-link" data-scroll-target="#grados-brix"><span class="header-section-number">4.1</span> 1. Grados Brix</a></li>
-  <li><a href="#ph" id="toc-ph" class="nav-link" data-scroll-target="#ph"><span class="header-section-number">4.2</span> 2. pH</a></li>
-  <li><a href="#densidad" id="toc-densidad" class="nav-link" data-scroll-target="#densidad"><span class="header-section-number">4.3</span> 3. Densidad</a></li>
-  <li><a href="#grado-alcohólico" id="toc-grado-alcohólico" class="nav-link" data-scroll-target="#grado-alcohólico"><span class="header-section-number">4.4</span> 4. Grado alcohólico</a></li>
-  <li><a href="#acidez-total" id="toc-acidez-total" class="nav-link" data-scroll-target="#acidez-total"><span class="header-section-number">4.5</span> 5. Acidez total</a></li>
+  </ul></li>
+  <li><a href="#análisis-de-variancia" id="toc-análisis-de-variancia" class="nav-link" data-scroll-target="#análisis-de-variancia"><span class="header-section-number">5</span> Análisis de variancia</a></li>
+  <li><a href="#representación-gráfica" id="toc-representación-gráfica" class="nav-link" data-scroll-target="#representación-gráfica"><span class="header-section-number">6</span> Representación gráfica</a>
+  <ul class="collapse">
+  <li><a href="#ph" id="toc-ph" class="nav-link" data-scroll-target="#ph"><span class="header-section-number">6.1</span> 2. pH</a></li>
+  </ul></li>
+  <li><a href="#representación-gráfica-1" id="toc-representación-gráfica-1" class="nav-link" data-scroll-target="#representación-gráfica-1"><span class="header-section-number">7</span> Representación gráfica</a>
+  <ul class="collapse">
+  <li><a href="#densidad" id="toc-densidad" class="nav-link" data-scroll-target="#densidad"><span class="header-section-number">7.1</span> 3. Densidad</a></li>
+  <li><a href="#grado-alcohólico" id="toc-grado-alcohólico" class="nav-link" data-scroll-target="#grado-alcohólico"><span class="header-section-number">7.2</span> 4. Grado alcohólico</a></li>
+  <li><a href="#acidez-total" id="toc-acidez-total" class="nav-link" data-scroll-target="#acidez-total"><span class="header-section-number">7.3</span> 5. Acidez total</a></li>
+  </ul></li>
+  <li><a href="#importación-de-datos-1" id="toc-importación-de-datos-1" class="nav-link" data-scroll-target="#importación-de-datos-1"><span class="header-section-number">8</span> Importación de datos</a></li>
+  <li><a href="#multivariate" id="toc-multivariate" class="nav-link" data-scroll-target="#multivariate"><span class="header-section-number">9</span> Multivariate</a>
+  <ul class="collapse">
+  <li><a href="#pca-information" id="toc-pca-information" class="nav-link" data-scroll-target="#pca-information"><span class="header-section-number">9.1</span> PCA information</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -155,7 +196,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="diseño-experimental" class="level2" data-number="1.3">
 <h2 data-number="1.3" class="anchored" data-anchor-id="diseño-experimental"><span class="header-section-number">1.3</span> Diseño experimental</h2>
 <p>Diseño de Bloques Completos al Azar (DBCA) con arreglo factorial 2 × 3 × 3 y tres bloques.</p>
-<p>[ Y_{ijkl}=+B_l+A_i+T_j+Temp_k+(AT)<em>{ij} +(ATemp)</em>{ik}+(TTemp)<em>{jk} +(ATTemp)</em>{ijk}+_{ijkl} ]</p>
+<p><span class="math display">\[Y_{ijkl}=\mu+B_l+A_i+T_j+Temp_k+(A\times T)_{ij}
++(A\times Temp)_{ik}+(T\times Temp)_{jk}
++(A\times T\times Temp)_{ijk}+\varepsilon_{ijkl}\]</span></p>
 </section>
 </section>
 <section id="configuración-y-paquetes" class="level1" data-number="2">
@@ -176,7 +219,7 @@ CPU cores in use:  3
  collate  Spanish_Peru.utf8
  ctype    Spanish_Peru.utf8
  tz       America/Lima
- date     2026-11-06
+ date     2026-11-07
  pandoc   3.8.3 @ C:/Program Files/RStudio/resources/app/bin/quarto/bin/tools/ (via rmarkdown)
  quarto   1.9.38 @ C:\\PROGRA~1\\RStudio\\RESOUR~1\\app\\bin\\quarto\\bin\\quarto.exe
 
@@ -376,6 +419,10 @@ CPU cores in use:  3
 <h1 data-number="4"><span class="header-section-number">4</span> Análisis de varianza y comparación de medias</h1>
 <section id="grados-brix" class="level2" data-number="4.1">
 <h2 data-number="4.1" class="anchored" data-anchor-id="grados-brix"><span class="header-section-number">4.1</span> 1. Grados Brix</h2>
+</section>
+</section>
+<section id="análisis-de-variancia" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Análisis de variancia</h1>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>md_brix <span class="ot">&lt;-</span> <span class="fu">aov</span>(</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  grados_brix <span class="sc">~</span> bloque <span class="sc">+</span> proporcion <span class="sc">*</span> tiempo <span class="sc">*</span> temperatura,</span>
@@ -409,8 +456,13 @@ Residuals
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>mc_brix <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(md_brix, <span class="sc">~</span> proporcion <span class="sc">*</span> tiempo <span class="sc">*</span> temperatura)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>multcomp<span class="sc">::</span><span class="fu">cld</span>(mc_brix, <span class="at">adjust =</span> <span class="st">"tukey"</span>, <span class="at">Letters =</span> letters)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Comparación de medias</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>mc_brix <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(md_brix, <span class="sc">~</span> proporcion <span class="sc">*</span> tiempo <span class="sc">*</span> temperatura)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>multcomp<span class="sc">::</span><span class="fu">cld</span>(</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  mc_brix, </span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">adjust =</span> <span class="st">"tukey"</span>, </span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">Letters =</span> letters)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> proporcion tiempo temperatura emmean     SE df lower.CL upper.CL .group
  P1         T3     t1            6.52 0.0673 34     6.31     6.74  a    
@@ -443,14 +495,61 @@ NOTE: If two or more means share the same grouping symbol,
 </div>
 </div>
 </section>
-<section id="ph" class="level2" data-number="4.2">
-<h2 data-number="4.2" class="anchored" data-anchor-id="ph"><span class="header-section-number">4.2</span> 2. pH</h2>
+<section id="representación-gráfica" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Representación gráfica</h1>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>md_ph <span class="ot">&lt;-</span> <span class="fu">aov</span>(</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  pH <span class="sc">~</span> bloque <span class="sc">+</span> proporcion <span class="sc">*</span> tiempo <span class="sc">*</span> temperatura,</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> fb</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(md_ph)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Interacción A × B × C</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Obtener medias estimadas</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>mc_brix <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  md_brix,</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span> proporcion <span class="sc">*</span> tiempo <span class="sc">*</span> temperatura</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Agrupación de medias con Tukey</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>tab <span class="ot">&lt;-</span> multcomp<span class="sc">::</span><span class="fu">cld</span>(</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  mc_brix,</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">adjust =</span> <span class="st">"tukey"</span>,</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">Letters =</span> letters</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Representación gráfica</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>pl <span class="ot">&lt;-</span> <span class="fu">plot_smr</span>(</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> tab,</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="st">"tiempo"</span>,</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="st">"emmean"</span>,</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">group =</span> <span class="st">"proporcion"</span>,</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">error =</span> <span class="st">"SE"</span>,</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">sig =</span> <span class="st">".group"</span>,</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">"Grados Brix"</span></span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">facet_wrap</span>(<span class="sc">~</span> temperatura) <span class="sc">+</span></span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">labs</span>(</span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Tiempo de tostado (min)"</span>,</span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">expression</span>(<span class="st">"Grados Brix ("</span><span class="sc">*</span>degree<span class="sc">*</span><span class="st">"Brix)"</span>),</span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"Proporción de maltas"</span>,</span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Interacción A × B × C"</span></span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Mostrar gráfico</span></span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>pl</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:98.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="ph" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="ph"><span class="header-section-number">6.1</span> 2. pH</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>md_ph <span class="ot">&lt;-</span> <span class="fu">aov</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  pH <span class="sc">~</span> bloque <span class="sc">+</span> proporcion <span class="sc">*</span> tiempo <span class="sc">*</span> temperatura,</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> fb</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(md_ph)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Variance Table
 
@@ -478,8 +577,10 @@ Residuals
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>mc_ph <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(md_ph, <span class="sc">~</span> proporcion <span class="sc">*</span> tiempo <span class="sc">*</span> temperatura)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>multcomp<span class="sc">::</span><span class="fu">cld</span>(mc_ph, <span class="at">adjust =</span> <span class="st">"tukey"</span>, <span class="at">Letters =</span> letters)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Comparación de medias</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>mc_ph <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(md_ph, <span class="sc">~</span> proporcion <span class="sc">*</span> tiempo <span class="sc">*</span> temperatura)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>multcomp<span class="sc">::</span><span class="fu">cld</span>(mc_ph, <span class="at">adjust =</span> <span class="st">"tukey"</span>, <span class="at">Letters =</span> letters)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> proporcion tiempo temperatura emmean     SE df lower.CL upper.CL .group   
  P1         T1     t1            3.60 0.0359 34     3.48     3.72  a       
@@ -512,14 +613,60 @@ NOTE: If two or more means share the same grouping symbol,
 </div>
 </div>
 </section>
-<section id="densidad" class="level2" data-number="4.3">
-<h2 data-number="4.3" class="anchored" data-anchor-id="densidad"><span class="header-section-number">4.3</span> 3. Densidad</h2>
+</section>
+<section id="representación-gráfica-1" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> Representación gráfica</h1>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>md_densidad <span class="ot">&lt;-</span> <span class="fu">aov</span>(</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  densidad <span class="sc">~</span> bloque <span class="sc">+</span> proporcion <span class="sc">*</span> tiempo <span class="sc">*</span> temperatura,</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> fb</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(md_densidad)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Obtener medias estimadas</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>mc_ph <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  md_ph,</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span> proporcion <span class="sc">*</span> tiempo <span class="sc">*</span> temperatura</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Agrupación de medias con Tukey</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>tab_ph <span class="ot">&lt;-</span> multcomp<span class="sc">::</span><span class="fu">cld</span>(</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  mc_ph,</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">adjust =</span> <span class="st">"tukey"</span>,</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">Letters =</span> letters</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Representación gráfica</span></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>pl_ph <span class="ot">&lt;-</span> <span class="fu">plot_smr</span>(</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> tab_ph,</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="st">"tiempo"</span>,</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="st">"emmean"</span>,</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">group =</span> <span class="st">"proporcion"</span>,</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">error =</span> <span class="st">"SE"</span>,</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">sig =</span> <span class="st">".group"</span>,</span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">"pH"</span></span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">facet_wrap</span>(<span class="sc">~</span> temperatura) <span class="sc">+</span></span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">labs</span>(</span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Tiempo de tostado (min)"</span>,</span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"pH"</span>,</span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"Proporción de maltas"</span>,</span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Interacción A × B × C para pH"</span></span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Mostrar gráfico</span></span>
+<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a>pl_ph</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:98.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="densidad" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="densidad"><span class="header-section-number">7.1</span> 3. Densidad</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>md_densidad <span class="ot">&lt;-</span> <span class="fu">aov</span>(</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  densidad <span class="sc">~</span> bloque <span class="sc">+</span> proporcion <span class="sc">*</span> tiempo <span class="sc">*</span> temperatura,</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> fb</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(md_densidad)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Variance Table
 
@@ -537,8 +684,10 @@ Residuals                     34 0.00085556 0.000025163
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>mc_densidad <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(md_densidad, <span class="sc">~</span> proporcion <span class="sc">*</span> tiempo <span class="sc">*</span> temperatura)</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>multcomp<span class="sc">::</span><span class="fu">cld</span>(mc_densidad, <span class="at">adjust =</span> <span class="st">"tukey"</span>, <span class="at">Letters =</span> letters)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Comparación de medias</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>mc_densidad <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(md_densidad, <span class="sc">~</span> proporcion <span class="sc">*</span> tiempo <span class="sc">*</span> temperatura)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>multcomp<span class="sc">::</span><span class="fu">cld</span>(mc_densidad, <span class="at">adjust =</span> <span class="st">"tukey"</span>, <span class="at">Letters =</span> letters)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> proporcion tiempo temperatura emmean     SE df lower.CL upper.CL .group
  P1         T3     t3            1.00 0.0029 34    0.994     1.01  a    
@@ -571,14 +720,14 @@ NOTE: If two or more means share the same grouping symbol,
 </div>
 </div>
 </section>
-<section id="grado-alcohólico" class="level2" data-number="4.4">
-<h2 data-number="4.4" class="anchored" data-anchor-id="grado-alcohólico"><span class="header-section-number">4.4</span> 4. Grado alcohólico</h2>
+<section id="grado-alcohólico" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="grado-alcohólico"><span class="header-section-number">7.2</span> 4. Grado alcohólico</h2>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>md_alcohol <span class="ot">&lt;-</span> <span class="fu">aov</span>(</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  grado_alcoholico <span class="sc">~</span> bloque <span class="sc">+</span> proporcion <span class="sc">*</span> tiempo <span class="sc">*</span> temperatura,</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> fb</span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(md_alcohol)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>md_alcohol <span class="ot">&lt;-</span> <span class="fu">aov</span>(</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  grado_alcoholico <span class="sc">~</span> bloque <span class="sc">+</span> proporcion <span class="sc">*</span> tiempo <span class="sc">*</span> temperatura,</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> fb</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(md_alcohol)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Variance Table
 
@@ -606,8 +755,10 @@ Residuals
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>mc_alcohol <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(md_alcohol, <span class="sc">~</span> proporcion <span class="sc">*</span> tiempo <span class="sc">*</span> temperatura)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>multcomp<span class="sc">::</span><span class="fu">cld</span>(mc_alcohol, <span class="at">adjust =</span> <span class="st">"tukey"</span>, <span class="at">Letters =</span> letters)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Comparación de medias</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>mc_alcohol <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(md_alcohol, <span class="sc">~</span> proporcion <span class="sc">*</span> tiempo <span class="sc">*</span> temperatura)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>multcomp<span class="sc">::</span><span class="fu">cld</span>(mc_alcohol, <span class="at">adjust =</span> <span class="st">"tukey"</span>, <span class="at">Letters =</span> letters)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> proporcion tiempo temperatura emmean     SE df lower.CL upper.CL .group  
  P2         T3     t2            3.45 0.0899 34     3.16     3.74  a      
@@ -640,14 +791,14 @@ NOTE: If two or more means share the same grouping symbol,
 </div>
 </div>
 </section>
-<section id="acidez-total" class="level2" data-number="4.5">
-<h2 data-number="4.5" class="anchored" data-anchor-id="acidez-total"><span class="header-section-number">4.5</span> 5. Acidez total</h2>
+<section id="acidez-total" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="acidez-total"><span class="header-section-number">7.3</span> 5. Acidez total</h2>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>md_acidez <span class="ot">&lt;-</span> <span class="fu">aov</span>(</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  acidez_total <span class="sc">~</span> bloque <span class="sc">+</span> proporcion <span class="sc">*</span> tiempo <span class="sc">*</span> temperatura,</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> fb</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(md_acidez)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>md_acidez <span class="ot">&lt;-</span> <span class="fu">aov</span>(</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  acidez_total <span class="sc">~</span> bloque <span class="sc">+</span> proporcion <span class="sc">*</span> tiempo <span class="sc">*</span> temperatura,</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> fb</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(md_acidez)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Variance Table
 
@@ -675,8 +826,10 @@ Residuals
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>mc_acidez <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(md_acidez, <span class="sc">~</span> proporcion <span class="sc">*</span> tiempo <span class="sc">*</span> temperatura)</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>multcomp<span class="sc">::</span><span class="fu">cld</span>(mc_acidez, <span class="at">adjust =</span> <span class="st">"tukey"</span>, <span class="at">Letters =</span> letters)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Comparación de medias</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>mc_acidez <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(md_acidez, <span class="sc">~</span> proporcion <span class="sc">*</span> tiempo <span class="sc">*</span> temperatura)</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>multcomp<span class="sc">::</span><span class="fu">cld</span>(mc_acidez, <span class="at">adjust =</span> <span class="st">"tukey"</span>, <span class="at">Letters =</span> letters)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> proporcion tiempo temperatura emmean      SE df lower.CL upper.CL .group  
  P2         T3     t1           0.210 0.00531 34    0.193    0.227  a      
@@ -706,6 +859,1236 @@ significance level used: alpha = 0.05
 NOTE: If two or more means share the same grouping symbol,
       then we cannot show them to be different.
       But we also did not show them to be the same. </code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">'https://inkaverse.com/setup.r'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Project directory:  C:/Users/Neylit Cubas/Documents/PROG_ANA_DATOS/exam_unidad_II 
+CPU cores detected:  4 
+CPU cores in use:  3 
+─ Session info ───────────────────────────────────────────────────────────────
+ setting  value
+ version  R version 4.5.3 (2026-03-11 ucrt)
+ os       Windows 10 x64 (build 19045)
+ system   x86_64, mingw32
+ ui       RTerm
+ language (EN)
+ collate  Spanish_Peru.utf8
+ ctype    Spanish_Peru.utf8
+ tz       America/Lima
+ date     2026-11-07
+ pandoc   3.8.3 @ C:/Program Files/RStudio/resources/app/bin/quarto/bin/tools/ (via rmarkdown)
+ quarto   1.9.38 @ C:\\PROGRA~1\\RStudio\\RESOUR~1\\app\\bin\\quarto\\bin\\quarto.exe
+
+─ Packages ───────────────────────────────────────────────────────────────────
+ package       * version date (UTC) lib source
+ abind           1.4-8   2024-09-12 [1] CRAN (R 4.5.0)
+ agricolae       1.3-7   2023-10-22 [1] CRAN (R 4.5.1)
+ AlgDesign       1.2.1.2 2025-04-06 [1] CRAN (R 4.5.0)
+ askpass         1.2.1   2024-10-04 [1] CRAN (R 4.5.0)
+ boot            1.3-32  2025-08-29 [1] CRAN (R 4.5.2)
+ cachem          1.1.0   2024-05-16 [1] CRAN (R 4.5.0)
+ car           * 3.1-5   2026-02-03 [1] CRAN (R 4.5.3)
+ carData       * 3.0-6   2026-01-30 [1] CRAN (R 4.5.3)
+ cellranger      1.1.0   2016-07-27 [1] CRAN (R 4.5.0)
+ cli             3.6.6   2026-04-09 [1] CRAN (R 4.5.3)
+ cluster         2.1.8.3 2026-07-30 [1] CRAN (R 4.5.3)
+ codetools       0.2-20  2024-03-31 [2] CRAN (R 4.5.3)
+ cowplot       * 1.2.0   2025-07-07 [1] CRAN (R 4.5.1)
+ curl            8.1.0   2026-10-14 [1] CRAN (R 4.5.3)
+ devtools      * 2.5.2   2026-04-30 [1] CRAN (R 4.5.3)
+ digest          0.6.39  2025-11-19 [1] CRAN (R 4.5.2)
+ dplyr         * 1.2.1   2026-04-03 [1] CRAN (R 4.5.3)
+ DT              0.34.0  2025-09-02 [1] CRAN (R 4.5.1)
+ ellipsis        0.3.3   2026-04-04 [1] CRAN (R 4.5.3)
+ emmeans       * 2.0.4   2026-07-15 [1] CRAN (R 4.5.3)
+ estimability    2.0.0   2026-06-26 [1] CRAN (R 4.5.3)
+ evaluate        1.0.5   2025-08-27 [1] CRAN (R 4.5.1)
+ FactoMineR    * 2.18    2026-10-14 [1] CRAN (R 4.5.3)
+ farver          2.1.2   2024-05-13 [1] CRAN (R 4.5.0)
+ fastmap         1.2.0   2024-05-15 [1] CRAN (R 4.5.0)
+ flashClust      1.1-4   2026-03-03 [1] CRAN (R 4.5.2)
+ forcats       * 1.0.1   2025-09-25 [1] CRAN (R 4.5.1)
+ Formula         1.2-6   2026-08-03 [1] CRAN (R 4.5.3)
+ fs              2.1.0   2026-04-18 [1] CRAN (R 4.5.3)
+ gargle          1.7.0   2026-10-28 [1] CRAN (R 4.5.3)
+ generics        0.1.4   2025-05-09 [1] CRAN (R 4.5.0)
+ ggplot2       * 4.0.3   2026-04-22 [1] CRAN (R 4.5.3)
+ ggrepel         0.9.8   2026-03-17 [1] CRAN (R 4.5.3)
+ glue            1.8.1   2026-04-17 [1] CRAN (R 4.5.3)
+ googledrive   * 2.1.2   2025-09-10 [1] CRAN (R 4.5.1)
+ googlesheets4 * 1.1.3   2026-10-29 [1] CRAN (R 4.5.3)
+ gtable          0.3.6   2024-10-25 [1] CRAN (R 4.5.0)
+ hms             1.1.4   2025-10-17 [1] CRAN (R 4.5.0)
+ htmltools       0.5.9   2025-12-04 [1] CRAN (R 4.5.3)
+ htmlwidgets     1.6.4   2023-12-06 [1] CRAN (R 4.5.1)
+ httpuv          1.6.17  2026-03-18 [1] CRAN (R 4.5.3)
+ httr            1.4.9   2026-09-01 [1] CRAN (R 4.5.3)
+ huito         * 0.2.8   2026-09-30 [1] CRAN (R 4.5.3)
+ inti          * 0.7.5   2026-09-30 [1] CRAN (R 4.5.3)
+ irlba           2.4.1   2026-10-05 [1] CRAN (R 4.5.3)
+ jsonlite        2.0.0   2025-03-27 [1] CRAN (R 4.5.0)
+ knitr         * 1.52    2026-09-06 [1] CRAN (R 4.5.3)
+ labeling        0.4.3   2023-08-29 [1] CRAN (R 4.5.0)
+ later           1.4.8   2026-03-05 [1] CRAN (R 4.5.3)
+ lattice         0.23-1  2026-08-12 [1] CRAN (R 4.5.3)
+ leaps           3.2     2024-06-10 [1] CRAN (R 4.5.1)
+ lifecycle       1.0.5   2026-01-08 [1] CRAN (R 4.5.3)
+ lme4          * 2.1-0   2026-10-23 [1] CRAN (R 4.5.3)
+ lubridate     * 1.9.5   2026-02-04 [1] CRAN (R 4.5.3)
+ magick        * 2.9.1   2026-02-28 [1] CRAN (R 4.5.3)
+ magrittr        2.0.5   2026-04-04 [1] CRAN (R 4.5.3)
+ MASS          * 7.3-66  2026-07-15 [1] CRAN (R 4.5.3)
+ Matrix        * 1.7-6   2026-07-25 [1] CRAN (R 4.5.3)
+ memoise         2.0.1   2021-11-26 [1] CRAN (R 4.5.0)
+ mime            0.13    2025-03-17 [1] CRAN (R 4.5.0)
+ minqa           1.2.8   2024-08-17 [1] CRAN (R 4.5.1)
+ mnormt          2.1.2   2026-01-27 [1] CRAN (R 4.5.2)
+ multcomp      * 1.4-32  2026-08-21 [1] CRAN (R 4.5.3)
+ multcompView    0.1-12  2026-07-26 [1] CRAN (R 4.5.3)
+ mvtnorm       * 1.4-2   2026-07-12 [1] CRAN (R 4.5.3)
+ nlme            3.1-171 2026-09-01 [1] CRAN (R 4.5.3)
+ nloptr          2.2.1   2025-03-17 [1] CRAN (R 4.5.1)
+ openssl         2.4.2   2026-06-09 [1] CRAN (R 4.5.3)
+ otel            0.2.0   2025-08-29 [1] CRAN (R 4.5.2)
+ pillar          1.11.1  2025-09-17 [1] CRAN (R 4.5.1)
+ pkgbuild        1.4.8   2025-05-26 [1] CRAN (R 4.5.1)
+ pkgconfig       2.0.3   2019-09-22 [1] CRAN (R 4.5.0)
+ pkgload         1.5.3   2026-06-15 [1] CRAN (R 4.5.3)
+ promises        1.5.0   2025-11-01 [1] CRAN (R 4.5.2)
+ psych         * 2.6.9   2026-09-30 [1] CRAN (R 4.5.3)
+ purrr         * 1.2.2   2026-04-10 [1] CRAN (R 4.5.3)
+ R6              2.6.1   2025-02-15 [1] CRAN (R 4.5.0)
+ rappdirs        0.3.4   2026-01-17 [1] CRAN (R 4.5.3)
+ rbibutils       2.4.1   2026-01-21 [1] CRAN (R 4.5.3)
+ RColorBrewer    1.1-3   2022-04-03 [1] CRAN (R 4.5.0)
+ Rcpp            1.1.2   2026-07-05 [1] CRAN (R 4.5.3)
+ Rdpack          2.6.6   2026-02-08 [1] CRAN (R 4.5.3)
+ readr         * 2.2.0   2026-02-19 [1] CRAN (R 4.5.3)
+ reformulas      0.4.4   2026-02-02 [1] CRAN (R 4.5.3)
+ RhpcBLASctl   * 0.23-42 2023-02-11 [1] CRAN (R 4.5.2)
+ rlang           1.3.0   2026-07-05 [1] CRAN (R 4.5.3)
+ rmarkdown       2.32    2026-09-01 [1] CRAN (R 4.5.3)
+ rstudioapi      0.19.0  2026-06-11 [1] CRAN (R 4.5.3)
+ S7              0.2.2   2026-04-22 [1] CRAN (R 4.5.3)
+ sandwich        3.1-3   2026-08-03 [1] CRAN (R 4.5.3)
+ scales          1.4.0   2025-04-24 [1] CRAN (R 4.5.0)
+ scatterplot3d   0.3-45  2026-02-23 [1] CRAN (R 4.5.2)
+ sessioninfo   * 1.2.4   2026-06-04 [1] CRAN (R 4.5.3)
+ shiny         * 1.14.0  2026-06-21 [1] CRAN (R 4.5.3)
+ showtext        0.9-8   2026-03-21 [1] CRAN (R 4.5.3)
+ showtextdb      3.0     2020-06-04 [1] CRAN (R 4.5.2)
+ stringi         1.8.9   2026-08-04 [1] CRAN (R 4.5.3)
+ stringr       * 1.6.0   2025-11-04 [1] CRAN (R 4.5.2)
+ survival      * 3.8-12  2026-09-09 [1] CRAN (R 4.5.3)
+ sysfonts        0.8.9   2024-03-02 [1] CRAN (R 4.5.2)
+ TH.data       * 1.1-5   2025-11-17 [1] CRAN (R 4.5.2)
+ tibble        * 3.3.1   2026-01-11 [1] CRAN (R 4.5.3)
+ tidyr         * 1.3.2   2025-12-19 [1] CRAN (R 4.5.3)
+ tidyselect      1.2.1   2024-03-11 [1] CRAN (R 4.5.0)
+ tidyverse     * 2.0.0   2023-02-22 [1] CRAN (R 4.5.1)
+ timechange      0.4.0   2026-01-29 [1] CRAN (R 4.5.3)
+ tzdb            0.5.0   2025-03-15 [1] CRAN (R 4.5.0)
+ usethis       * 3.2.2   2026-09-10 [1] CRAN (R 4.5.3)
+ vctrs           0.7.3   2026-04-11 [1] CRAN (R 4.5.3)
+ withr           3.0.3   2026-06-19 [1] CRAN (R 4.5.3)
+ xfun            0.62    2026-10-16 [1] CRAN (R 4.5.3)
+ xtable          1.8-8   2026-02-22 [1] CRAN (R 4.5.3)
+ yaml            2.3.12  2025-12-10 [1] CRAN (R 4.5.3)
+ zoo             1.9-1   2026-09-25 [1] CRAN (R 4.5.3)
+
+ [1] C:/Users/Neylit Cubas/AppData/Local/R/win-library/4.5
+ [2] C:/Program Files/R/R-4.5.3/library
+ * ── Packages attached to the search path.
+
+──────────────────────────────────────────────────────────────────────────────</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="importación-de-datos-1" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> Importación de datos</h1>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reemplazar el texto entre comillas por el enlace de Google Sheets.</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>gs <span class="ot">&lt;-</span> <span class="st">"https://docs.google.com/spreadsheets/d/1Ghnx_ZC7K33HhyMXbC6sK0W6s1_27C13o-F9-NmGItw/edit?gid=0#gid=0"</span> <span class="sc">%&gt;%</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_sheets_id</span>()</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>fb <span class="ot">&lt;-</span> gs <span class="sc">%&gt;%</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">range_read</span>(</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">ss =</span> .,</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">sheet =</span> <span class="st">"fb"</span>,</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">col_types =</span> <span class="st">"c"</span></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">bloque =</span> <span class="fu">as.factor</span>(bloque),</span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">tratamiento =</span> <span class="fu">as.factor</span>(tratamiento),</span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">proporcion =</span> <span class="fu">factor</span>(<span class="fu">substr</span>(<span class="fu">as.character</span>(tratamiento), <span class="dv">1</span>, <span class="dv">2</span>)),</span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">tiempo =</span> <span class="fu">factor</span>(<span class="fu">substr</span>(<span class="fu">as.character</span>(tratamiento), <span class="dv">3</span>, <span class="dv">4</span>)),</span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">temperatura =</span> <span class="fu">factor</span>(<span class="fu">substr</span>(<span class="fu">as.character</span>(tratamiento), <span class="dv">5</span>, <span class="dv">6</span>)),</span>
+<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(</span>
+<span id="cb32-18"><a href="#cb32-18" aria-hidden="true" tabindex="-1"></a>      <span class="fu">c</span>(grados_brix, pH, densidad, grado_alcoholico, acidez_total),</span>
+<span id="cb32-19"><a href="#cb32-19" aria-hidden="true" tabindex="-1"></a>      <span class="sc">~</span> readr<span class="sc">::</span><span class="fu">parse_number</span>(<span class="fu">as.character</span>(.x))</span>
+<span id="cb32-20"><a href="#cb32-20" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb32-21"><a href="#cb32-21" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb32-22"><a href="#cb32-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-23"><a href="#cb32-23" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(fb)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>tibble [54 × 10] (S3: tbl_df/tbl/data.frame)
+ $ bloque          : Factor w/ 3 levels "I","II","III": 1 2 3 1 2 3 1 2 3 1 ...
+ $ tratamiento     : Factor w/ 18 levels "P1T1t1","P1T1t2",..: 1 1 1 2 2 2 3 3 3 4 ...
+ $ grados_brix     : num [1:54] 7.33 7.43 7.4 7.54 7.32 7.45 8.34 8.43 8.56 6.52 ...
+ $ pH              : num [1:54] 3.7 3.5 3.6 4.37 4.35 4.45 4.6 4.55 4.56 4.78 ...
+ $ densidad        : num [1:54] 1.01 1.01 1.01 1.01 1.01 1.01 1.01 1.01 1.01 1.01 ...
+ $ grado_alcoholico: num [1:54] 4.6 4.45 3.5 5.77 5.65 5.55 3.6 3.55 3.56 5.88 ...
+ $ acidez_total    : num [1:54] 0.37 0.35 0.36 0.25 0.25 0.25 0.21 0.21 0.22 0.39 ...
+ $ proporcion      : Factor w/ 2 levels "P1","P2": 1 1 1 1 1 1 1 1 1 1 ...
+ $ tiempo          : Factor w/ 3 levels "T1","T2","T3": 1 1 1 1 1 1 1 1 1 2 ...
+ $ temperatura     : Factor w/ 3 levels "t1","t2","t3": 1 1 1 2 2 2 3 3 3 1 ...</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fb)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> bloque    tratamiento  grados_brix          pH           densidad   
+ I  :18   P1T1t1 : 3   Min.   :6.360   Min.   :3.500   Min.   :1.00  
+ II :18   P1T1t2 : 3   1st Qu.:6.753   1st Qu.:4.550   1st Qu.:1.01  
+ III:18   P1T1t3 : 3   Median :7.435   Median :4.590   Median :1.01  
+          P1T2t1 : 3   Mean   :7.430   Mean   :4.582   Mean   :1.01  
+          P1T2t2 : 3   3rd Qu.:7.665   3rd Qu.:4.750   3rd Qu.:1.01  
+          P1T2t3 : 3   Max.   :8.900   Max.   :4.980   Max.   :1.04  
+          (Other):36                                                 
+ grado_alcoholico  acidez_total   proporcion tiempo  temperatura
+ Min.   :3.440    Min.   :0.200   P1:27      T1:18   t1:18      
+ 1st Qu.:3.683    1st Qu.:0.250   P2:27      T2:18   t2:18      
+ Median :4.655    Median :0.275              T3:18   t3:18      
+ Mean   :4.599    Mean   :0.298                                 
+ 3rd Qu.:5.438    3rd Qu.:0.350                                 
+ Max.   :5.880    Max.   :0.460                                 
+                                                                </code></pre>
+</div>
+</div>
+</section>
+<section id="multivariate" class="level1" data-number="9">
+<h1 data-number="9"><span class="header-section-number">9</span> Multivariate</h1>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(factoextra)</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>dtx <span class="ot">&lt;-</span> fb <span class="sc">%&gt;%</span> </span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(<span class="st">"bloque"</span>, <span class="st">"tratamiento"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(proporcion, tiempo, temperatura) <span class="sc">%&gt;%</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), <span class="sc">~</span> <span class="fu">mean</span>(.x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unite</span>(<span class="st">"rowname"</span>, <span class="fu">c</span>(<span class="st">"proporcion"</span>, <span class="st">"tiempo"</span>, <span class="st">"temperatura"</span>),</span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">remove =</span> <span class="cn">FALSE</span>, <span class="at">sep =</span> <span class="st">"-"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">column_to_rownames</span>(<span class="st">"rowname"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(dtx)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   18 obs. of  8 variables:
+ $ proporcion      : Factor w/ 2 levels "P1","P2": 1 1 1 1 1 1 1 1 1 2 ...
+ $ tiempo          : Factor w/ 3 levels "T1","T2","T3": 1 1 1 2 2 2 3 3 3 1 ...
+ $ temperatura     : Factor w/ 3 levels "t1","t2","t3": 1 2 3 1 2 3 1 2 3 1 ...
+ $ grados_brix     : num  7.39 7.44 8.44 6.61 7.61 ...
+ $ pH              : num  3.6 4.39 4.57 4.78 4.63 ...
+ $ densidad        : num  1.01 1.01 1.01 1.01 1.01 ...
+ $ grado_alcoholico: num  4.18 5.66 3.57 5.81 4.86 ...
+ $ acidez_total    : num  0.36 0.25 0.213 0.39 0.27 ...</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>mv <span class="ot">&lt;-</span> dtx <span class="sc">%&gt;%</span> </span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">PCA</span>(<span class="at">scale.unit =</span> <span class="cn">TRUE</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>      , <span class="at">graph =</span> <span class="cn">FALSE</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>      , <span class="at">quali.sup =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>))</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>var <span class="ot">&lt;-</span> mv <span class="sc">%&gt;%</span> </span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot.PCA</span>(<span class="at">choix =</span> <span class="st">"var"</span>, <span class="at">cex =</span> <span class="fl">0.7</span>)</span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>var</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:98.0%"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>cos <span class="ot">&lt;-</span> mv <span class="sc">%&gt;%</span> </span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fviz_pca_var</span>(<span class="at">col.var =</span> <span class="st">"cos2"</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>               , <span class="at">gradient.cols =</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"forestgreen"</span>, <span class="st">"blue"</span>)</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>               , <span class="at">repel =</span> <span class="cn">TRUE</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>               , <span class="at">labelsize =</span> <span class="dv">2</span>)</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>cos</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-11-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:98.0%"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>ind <span class="ot">&lt;-</span> mv <span class="sc">%&gt;%</span> </span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot.PCA</span>(<span class="at">choix =</span> <span class="st">"ind"</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>           , <span class="at">cex =</span> <span class="fl">0.7</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>           , <span class="at">label =</span> <span class="st">"ind"</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>           , <span class="at">invisible =</span> <span class="st">"quali"</span></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>           , <span class="at">habillage =</span> <span class="dv">1</span></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>           )</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>ind</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-11-3.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:98.0%"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>pcainfo <span class="ot">&lt;-</span> mv<span class="sc">$</span>var</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>pcainfo<span class="sc">$</span>coord <span class="sc">%&gt;%</span> <span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">"Variable correlations"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Variable correlations</caption>
+<colgroup>
+<col style="width: 23%">
+<col style="width: 15%">
+<col style="width: 15%">
+<col style="width: 15%">
+<col style="width: 15%">
+<col style="width: 15%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">Dim.1</th>
+<th style="text-align: right;">Dim.2</th>
+<th style="text-align: right;">Dim.3</th>
+<th style="text-align: right;">Dim.4</th>
+<th style="text-align: right;">Dim.5</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">grados_brix</td>
+<td style="text-align: right;">0.6008276</td>
+<td style="text-align: right;">-0.6019680</td>
+<td style="text-align: right;">0.2105586</td>
+<td style="text-align: right;">0.2464611</td>
+<td style="text-align: right;">0.4142013</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pH</td>
+<td style="text-align: right;">0.4586968</td>
+<td style="text-align: right;">0.1951303</td>
+<td style="text-align: right;">-0.6952406</td>
+<td style="text-align: right;">0.4979806</td>
+<td style="text-align: right;">-0.1420468</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">densidad</td>
+<td style="text-align: right;">0.4680466</td>
+<td style="text-align: right;">0.3730082</td>
+<td style="text-align: right;">0.6903074</td>
+<td style="text-align: right;">0.2708224</td>
+<td style="text-align: right;">-0.3031967</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">grado_alcoholico</td>
+<td style="text-align: right;">0.3663486</td>
+<td style="text-align: right;">0.7974154</td>
+<td style="text-align: right;">-0.0503411</td>
+<td style="text-align: right;">-0.2666599</td>
+<td style="text-align: right;">0.3953172</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">acidez_total</td>
+<td style="text-align: right;">-0.6961464</td>
+<td style="text-align: right;">0.2794582</td>
+<td style="text-align: right;">0.1612569</td>
+<td style="text-align: right;">0.5825927</td>
+<td style="text-align: right;">0.2680771</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>pcainfo<span class="sc">$</span>contrib <span class="sc">%&gt;%</span> <span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">"Variable Contribution"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Variable Contribution</caption>
+<colgroup>
+<col style="width: 25%">
+<col style="width: 13%">
+<col style="width: 15%">
+<col style="width: 15%">
+<col style="width: 15%">
+<col style="width: 15%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">Dim.1</th>
+<th style="text-align: right;">Dim.2</th>
+<th style="text-align: right;">Dim.3</th>
+<th style="text-align: right;">Dim.4</th>
+<th style="text-align: right;">Dim.5</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">grados_brix</td>
+<td style="text-align: right;">25.61520</td>
+<td style="text-align: right;">28.907266</td>
+<td style="text-align: right;">4.292872</td>
+<td style="text-align: right;">7.663830</td>
+<td style="text-align: right;">33.520828</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pH</td>
+<td style="text-align: right;">14.92964</td>
+<td style="text-align: right;">3.037454</td>
+<td style="text-align: right;">46.802839</td>
+<td style="text-align: right;">31.287717</td>
+<td style="text-align: right;">3.942347</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">densidad</td>
+<td style="text-align: right;">15.54448</td>
+<td style="text-align: right;">11.099332</td>
+<td style="text-align: right;">46.141003</td>
+<td style="text-align: right;">9.253763</td>
+<td style="text-align: right;">17.961422</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">grado_alcoholico</td>
+<td style="text-align: right;">9.52329</td>
+<td style="text-align: right;">50.725862</td>
+<td style="text-align: right;">0.245385</td>
+<td style="text-align: right;">8.971488</td>
+<td style="text-align: right;">30.533975</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">acidez_total</td>
+<td style="text-align: right;">34.38738</td>
+<td style="text-align: right;">6.230085</td>
+<td style="text-align: right;">2.517901</td>
+<td style="text-align: right;">42.823203</td>
+<td style="text-align: right;">14.041428</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>pcainfo<span class="sc">$</span>cos2 <span class="sc">%&gt;%</span> <span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">"Variable Cos2"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Variable Cos2</caption>
+<colgroup>
+<col style="width: 25%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">Dim.1</th>
+<th style="text-align: right;">Dim.2</th>
+<th style="text-align: right;">Dim.3</th>
+<th style="text-align: right;">Dim.4</th>
+<th style="text-align: right;">Dim.5</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">grados_brix</td>
+<td style="text-align: right;">0.3609938</td>
+<td style="text-align: right;">0.3623655</td>
+<td style="text-align: right;">0.0443349</td>
+<td style="text-align: right;">0.0607431</td>
+<td style="text-align: right;">0.1715627</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pH</td>
+<td style="text-align: right;">0.2104027</td>
+<td style="text-align: right;">0.0380758</td>
+<td style="text-align: right;">0.4833595</td>
+<td style="text-align: right;">0.2479847</td>
+<td style="text-align: right;">0.0201773</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">densidad</td>
+<td style="text-align: right;">0.2190676</td>
+<td style="text-align: right;">0.1391351</td>
+<td style="text-align: right;">0.4765243</td>
+<td style="text-align: right;">0.0733448</td>
+<td style="text-align: right;">0.0919282</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">grado_alcoholico</td>
+<td style="text-align: right;">0.1342113</td>
+<td style="text-align: right;">0.6358713</td>
+<td style="text-align: right;">0.0025342</td>
+<td style="text-align: right;">0.0711075</td>
+<td style="text-align: right;">0.1562757</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">acidez_total</td>
+<td style="text-align: right;">0.4846197</td>
+<td style="text-align: right;">0.0780969</td>
+<td style="text-align: right;">0.0260038</td>
+<td style="text-align: right;">0.3394143</td>
+<td style="text-align: right;">0.0718653</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>cls <span class="ot">&lt;-</span> mv <span class="sc">%&gt;%</span> <span class="fu">HCPC</span>(<span class="at">nb.clust =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">graph =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>map <span class="ot">&lt;-</span> <span class="fu">plot.HCPC</span>(cls, <span class="at">choice =</span> <span class="st">"map"</span>, <span class="at">draw.tree =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-11-4.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:98.0%"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>cls<span class="sc">$</span>call<span class="sc">$</span>t<span class="sc">$</span>tree</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+flashClust::hclust(d = dissi, method = method, members = weight)
+
+Cluster method   : ward 
+Distance         : euclidean 
+Number of objects: 18 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>cls<span class="sc">$</span>data.clust <span class="sc">%&gt;%</span> </span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">"Cluster membership of each individual"</span>)  </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Cluster membership of each individual</caption>
+<colgroup>
+<col style="width: 8%">
+<col style="width: 10%">
+<col style="width: 6%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 16%">
+<col style="width: 12%">
+<col style="width: 5%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">proporcion</th>
+<th style="text-align: left;">tiempo</th>
+<th style="text-align: left;">temperatura</th>
+<th style="text-align: right;">grados_brix</th>
+<th style="text-align: right;">pH</th>
+<th style="text-align: right;">densidad</th>
+<th style="text-align: right;">grado_alcoholico</th>
+<th style="text-align: right;">acidez_total</th>
+<th style="text-align: left;">clust</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">P1-T1-t1</td>
+<td style="text-align: left;">P1</td>
+<td style="text-align: left;">T1</td>
+<td style="text-align: left;">t1</td>
+<td style="text-align: right;">7.386667</td>
+<td style="text-align: right;">3.600000</td>
+<td style="text-align: right;">1.010000</td>
+<td style="text-align: right;">4.183333</td>
+<td style="text-align: right;">0.3600000</td>
+<td style="text-align: left;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">P1-T1-t2</td>
+<td style="text-align: left;">P1</td>
+<td style="text-align: left;">T1</td>
+<td style="text-align: left;">t2</td>
+<td style="text-align: right;">7.436667</td>
+<td style="text-align: right;">4.390000</td>
+<td style="text-align: right;">1.010000</td>
+<td style="text-align: right;">5.656667</td>
+<td style="text-align: right;">0.2500000</td>
+<td style="text-align: left;">7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">P1-T1-t3</td>
+<td style="text-align: left;">P1</td>
+<td style="text-align: left;">T1</td>
+<td style="text-align: left;">t3</td>
+<td style="text-align: right;">8.443333</td>
+<td style="text-align: right;">4.570000</td>
+<td style="text-align: right;">1.010000</td>
+<td style="text-align: right;">3.570000</td>
+<td style="text-align: right;">0.2133333</td>
+<td style="text-align: left;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">P1-T2-t1</td>
+<td style="text-align: left;">P1</td>
+<td style="text-align: left;">T2</td>
+<td style="text-align: left;">t1</td>
+<td style="text-align: right;">6.606667</td>
+<td style="text-align: right;">4.776667</td>
+<td style="text-align: right;">1.010000</td>
+<td style="text-align: right;">5.810000</td>
+<td style="text-align: right;">0.3900000</td>
+<td style="text-align: left;">4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">P1-T2-t2</td>
+<td style="text-align: left;">P1</td>
+<td style="text-align: left;">T2</td>
+<td style="text-align: left;">t2</td>
+<td style="text-align: right;">7.606667</td>
+<td style="text-align: right;">4.626667</td>
+<td style="text-align: right;">1.010000</td>
+<td style="text-align: right;">4.860000</td>
+<td style="text-align: right;">0.2700000</td>
+<td style="text-align: left;">7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">P1-T2-t3</td>
+<td style="text-align: left;">P1</td>
+<td style="text-align: left;">T2</td>
+<td style="text-align: left;">t3</td>
+<td style="text-align: right;">8.580000</td>
+<td style="text-align: right;">4.730000</td>
+<td style="text-align: right;">1.010000</td>
+<td style="text-align: right;">4.763333</td>
+<td style="text-align: right;">0.3633333</td>
+<td style="text-align: left;">8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">P1-T3-t1</td>
+<td style="text-align: left;">P1</td>
+<td style="text-align: left;">T3</td>
+<td style="text-align: left;">t1</td>
+<td style="text-align: right;">6.523333</td>
+<td style="text-align: right;">4.570000</td>
+<td style="text-align: right;">1.010000</td>
+<td style="text-align: right;">4.903333</td>
+<td style="text-align: right;">0.2766667</td>
+<td style="text-align: left;">3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">P1-T3-t2</td>
+<td style="text-align: left;">P1</td>
+<td style="text-align: left;">T3</td>
+<td style="text-align: left;">t2</td>
+<td style="text-align: right;">7.420000</td>
+<td style="text-align: right;">4.550000</td>
+<td style="text-align: right;">1.020000</td>
+<td style="text-align: right;">4.550000</td>
+<td style="text-align: right;">0.3433333</td>
+<td style="text-align: left;">6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">P1-T3-t3</td>
+<td style="text-align: left;">P1</td>
+<td style="text-align: left;">T3</td>
+<td style="text-align: left;">t3</td>
+<td style="text-align: right;">7.503333</td>
+<td style="text-align: right;">4.516667</td>
+<td style="text-align: right;">1.003333</td>
+<td style="text-align: right;">3.510000</td>
+<td style="text-align: right;">0.3166667</td>
+<td style="text-align: left;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">P2-T1-t1</td>
+<td style="text-align: left;">P2</td>
+<td style="text-align: left;">T1</td>
+<td style="text-align: left;">t1</td>
+<td style="text-align: right;">7.366667</td>
+<td style="text-align: right;">4.466667</td>
+<td style="text-align: right;">1.010000</td>
+<td style="text-align: right;">5.450000</td>
+<td style="text-align: right;">0.2233333</td>
+<td style="text-align: left;">7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">P2-T1-t2</td>
+<td style="text-align: left;">P2</td>
+<td style="text-align: left;">T1</td>
+<td style="text-align: left;">t2</td>
+<td style="text-align: right;">7.600000</td>
+<td style="text-align: right;">4.740000</td>
+<td style="text-align: right;">1.010000</td>
+<td style="text-align: right;">3.570000</td>
+<td style="text-align: right;">0.3533333</td>
+<td style="text-align: left;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">P2-T1-t3</td>
+<td style="text-align: left;">P2</td>
+<td style="text-align: left;">T1</td>
+<td style="text-align: left;">t3</td>
+<td style="text-align: right;">8.706667</td>
+<td style="text-align: right;">4.893333</td>
+<td style="text-align: right;">1.010000</td>
+<td style="text-align: right;">4.856667</td>
+<td style="text-align: right;">0.2700000</td>
+<td style="text-align: left;">8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">P2-T2-t1</td>
+<td style="text-align: left;">P2</td>
+<td style="text-align: left;">T2</td>
+<td style="text-align: left;">t1</td>
+<td style="text-align: right;">6.673333</td>
+<td style="text-align: right;">4.760000</td>
+<td style="text-align: right;">1.010000</td>
+<td style="text-align: right;">5.726667</td>
+<td style="text-align: right;">0.3233333</td>
+<td style="text-align: left;">4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">P2-T2-t2</td>
+<td style="text-align: left;">P2</td>
+<td style="text-align: left;">T2</td>
+<td style="text-align: left;">t2</td>
+<td style="text-align: right;">7.556667</td>
+<td style="text-align: right;">4.673333</td>
+<td style="text-align: right;">1.013333</td>
+<td style="text-align: right;">4.466667</td>
+<td style="text-align: right;">0.2566667</td>
+<td style="text-align: left;">5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">P2-T2-t3</td>
+<td style="text-align: left;">P2</td>
+<td style="text-align: left;">T2</td>
+<td style="text-align: left;">t3</td>
+<td style="text-align: right;">6.660000</td>
+<td style="text-align: right;">4.780000</td>
+<td style="text-align: right;">1.006667</td>
+<td style="text-align: right;">3.733333</td>
+<td style="text-align: right;">0.2500000</td>
+<td style="text-align: left;">3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">P2-T3-t1</td>
+<td style="text-align: left;">P2</td>
+<td style="text-align: left;">T3</td>
+<td style="text-align: left;">t1</td>
+<td style="text-align: right;">7.600000</td>
+<td style="text-align: right;">4.750000</td>
+<td style="text-align: right;">1.010000</td>
+<td style="text-align: right;">5.700000</td>
+<td style="text-align: right;">0.2100000</td>
+<td style="text-align: left;">7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">P2-T3-t2</td>
+<td style="text-align: left;">P2</td>
+<td style="text-align: left;">T3</td>
+<td style="text-align: left;">t2</td>
+<td style="text-align: right;">7.493333</td>
+<td style="text-align: right;">4.503333</td>
+<td style="text-align: right;">1.010000</td>
+<td style="text-align: right;">3.453333</td>
+<td style="text-align: right;">0.2533333</td>
+<td style="text-align: left;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">P2-T3-t3</td>
+<td style="text-align: left;">P2</td>
+<td style="text-align: left;">T3</td>
+<td style="text-align: left;">t3</td>
+<td style="text-align: right;">6.583333</td>
+<td style="text-align: right;">4.576667</td>
+<td style="text-align: right;">1.006667</td>
+<td style="text-align: right;">4.016667</td>
+<td style="text-align: right;">0.4400000</td>
+<td style="text-align: left;">2</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>cls<span class="sc">$</span>desc.var<span class="sc">$</span>quanti <span class="sc">%&gt;%</span> </span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">"Quantitative variables characterizing each cluster"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="kable_wrapper">
+<caption>
+Quantitative variables characterizing each cluster
+</caption>
+<tbody>
+<tr>
+<td>
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 3%">
+<col style="width: 12%">
+<col style="width: 20%">
+<col style="width: 15%">
+<col style="width: 18%">
+<col style="width: 13%">
+<col style="width: 12%">
+<col style="width: 3%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">v.test</th>
+<th style="text-align: right;">Mean in category</th>
+<th style="text-align: right;">Overall mean</th>
+<th style="text-align: right;">sd in category</th>
+<th style="text-align: right;">Overall sd</th>
+<th style="text-align: right;">p.value</th>
+<th style="text-align: right;">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">pH</td>
+<td style="text-align: right;">-3.629267</td>
+<td style="text-align: right;">3.6</td>
+<td style="text-align: right;">4.581852</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.2705372</td>
+<td style="text-align: right;">0.0002842</td>
+<td style="text-align: right;">1</td>
+</tr>
+</tbody>
+</table>
+</td>
+<td>
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 17%">
+<col style="width: 10%">
+<col style="width: 17%">
+<col style="width: 13%">
+<col style="width: 15%">
+<col style="width: 11%">
+<col style="width: 10%">
+<col style="width: 3%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">v.test</th>
+<th style="text-align: right;">Mean in category</th>
+<th style="text-align: right;">Overall mean</th>
+<th style="text-align: right;">sd in category</th>
+<th style="text-align: right;">Overall sd</th>
+<th style="text-align: right;">p.value</th>
+<th style="text-align: right;">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">acidez_total</td>
+<td style="text-align: right;">2.076285</td>
+<td style="text-align: right;">0.370000</td>
+<td style="text-align: right;">0.297963</td>
+<td style="text-align: right;">0.0517115</td>
+<td style="text-align: right;">0.0639747</td>
+<td style="text-align: right;">0.0378676</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">grado_alcoholico</td>
+<td style="text-align: right;">-2.037186</td>
+<td style="text-align: right;">3.698889</td>
+<td style="text-align: right;">4.598889</td>
+<td style="text-align: right;">0.2260340</td>
+<td style="text-align: right;">0.8146127</td>
+<td style="text-align: right;">0.0416314</td>
+<td style="text-align: right;">3</td>
+</tr>
+</tbody>
+</table>
+</td>
+<td>
+</td>
+<td>
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 17%">
+<col style="width: 9%">
+<col style="width: 17%">
+<col style="width: 13%">
+<col style="width: 15%">
+<col style="width: 11%">
+<col style="width: 10%">
+<col style="width: 3%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">v.test</th>
+<th style="text-align: right;">Mean in category</th>
+<th style="text-align: right;">Overall mean</th>
+<th style="text-align: right;">sd in category</th>
+<th style="text-align: right;">Overall sd</th>
+<th style="text-align: right;">p.value</th>
+<th style="text-align: right;">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">grado_alcoholico</td>
+<td style="text-align: right;">2.092704</td>
+<td style="text-align: right;">5.768333</td>
+<td style="text-align: right;">4.598889</td>
+<td style="text-align: right;">0.0416667</td>
+<td style="text-align: right;">0.8146127</td>
+<td style="text-align: right;">0.0363755</td>
+<td style="text-align: right;">2</td>
+</tr>
+</tbody>
+</table>
+</td>
+<td>
+</td>
+<td>
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 10%">
+<col style="width: 9%">
+<col style="width: 19%">
+<col style="width: 15%">
+<col style="width: 17%">
+<col style="width: 12%">
+<col style="width: 11%">
+<col style="width: 3%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">v.test</th>
+<th style="text-align: right;">Mean in category</th>
+<th style="text-align: right;">Overall mean</th>
+<th style="text-align: right;">sd in category</th>
+<th style="text-align: right;">Overall sd</th>
+<th style="text-align: right;">p.value</th>
+<th style="text-align: right;">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">densidad</td>
+<td style="text-align: right;">3.18198</td>
+<td style="text-align: right;">1.02</td>
+<td style="text-align: right;">1.01</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.0031427</td>
+<td style="text-align: right;">0.0014627</td>
+<td style="text-align: right;">1</td>
+</tr>
+</tbody>
+</table>
+</td>
+<td>
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 17%">
+<col style="width: 10%">
+<col style="width: 17%">
+<col style="width: 13%">
+<col style="width: 15%">
+<col style="width: 11%">
+<col style="width: 10%">
+<col style="width: 3%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">v.test</th>
+<th style="text-align: right;">Mean in category</th>
+<th style="text-align: right;">Overall mean</th>
+<th style="text-align: right;">sd in category</th>
+<th style="text-align: right;">Overall sd</th>
+<th style="text-align: right;">p.value</th>
+<th style="text-align: right;">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">grado_alcoholico</td>
+<td style="text-align: right;">2.212456</td>
+<td style="text-align: right;">5.4166667</td>
+<td style="text-align: right;">4.598889</td>
+<td style="text-align: right;">0.3349876</td>
+<td style="text-align: right;">0.8146127</td>
+<td style="text-align: right;">0.0269352</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">acidez_total</td>
+<td style="text-align: right;">-2.054207</td>
+<td style="text-align: right;">0.2383333</td>
+<td style="text-align: right;">0.297963</td>
+<td style="text-align: right;">0.0232737</td>
+<td style="text-align: right;">0.0639747</td>
+<td style="text-align: right;">0.0399557</td>
+<td style="text-align: right;">4</td>
+</tr>
+</tbody>
+</table>
+</td>
+<td>
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 10%">
+<col style="width: 18%">
+<col style="width: 14%">
+<col style="width: 16%">
+<col style="width: 12%">
+<col style="width: 11%">
+<col style="width: 3%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">v.test</th>
+<th style="text-align: right;">Mean in category</th>
+<th style="text-align: right;">Overall mean</th>
+<th style="text-align: right;">sd in category</th>
+<th style="text-align: right;">Overall sd</th>
+<th style="text-align: right;">p.value</th>
+<th style="text-align: right;">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">grados_brix</td>
+<td style="text-align: right;">2.742566</td>
+<td style="text-align: right;">8.643333</td>
+<td style="text-align: right;">7.43037</td>
+<td style="text-align: right;">0.0633333</td>
+<td style="text-align: right;">0.6447182</td>
+<td style="text-align: right;">0.0060961</td>
+<td style="text-align: right;">2</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>cls<span class="sc">$</span>desc.var<span class="sc">$</span>category <span class="sc">%&gt;%</span> </span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">"Categorical variables significantly by cluster"</span>)  </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<p>Table: Categorical variables significantly by cluster</p>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(cls<span class="sc">$</span>data.clust<span class="sc">$</span>clust) <span class="sc">%&gt;%</span> </span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">"Number of individuals assigned to each cluster"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Number of individuals assigned to each cluster</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Var1</th>
+<th style="text-align: right;">Freq</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">1</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">3</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">4</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">5</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">6</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">7</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">8</td>
+<td style="text-align: right;">2</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>plot <span class="ot">&lt;-</span> <span class="fu">list</span>(var, cos, ind, map) <span class="sc">%&gt;%</span> </span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_grid</span>(<span class="at">plotlist =</span> ., <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">labels =</span> <span class="st">"auto"</span>)</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="at">plot =</span> plot, <span class="st">"multivariate.jpg"</span>, <span class="at">units =</span> <span class="st">"cm"</span></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>       , <span class="at">width =</span> <span class="dv">30</span>, <span class="at">height =</span> <span class="dv">30</span>)</span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a><span class="fu">include_graphics</span>(<span class="st">"multivariate.jpg"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="multivariate.jpg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:98.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="pca-information" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="pca-information"><span class="header-section-number">9.1</span> PCA information</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="do">## PCA information</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(corrplot)</span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplotify)</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Porcentaje de varianza explicada</span></span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>c1 <span class="ot">&lt;-</span> <span class="fu">fviz_eig</span>(mv, </span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">addlabels =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a>                <span class="at">hjust =</span> <span class="fl">0.05</span>,</span>
+<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">barfill =</span> <span class="st">"white"</span>,</span>
+<span id="cb52-11"><a href="#cb52-11" aria-hidden="true" tabindex="-1"></a>                <span class="at">barcolor =</span> <span class="st">"darkblue"</span>,</span>
+<span id="cb52-12"><a href="#cb52-12" aria-hidden="true" tabindex="-1"></a>                <span class="at">linecolor =</span> <span class="st">"red"</span>) <span class="sc">+</span> </span>
+<span id="cb52-13"><a href="#cb52-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb52-14"><a href="#cb52-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"PCA - Porcentaje de varianza explicada"</span>,</span>
+<span id="cb52-15"><a href="#cb52-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Varianza (%)"</span>,</span>
+<span id="cb52-16"><a href="#cb52-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Componentes principales"</span></span>
+<span id="cb52-17"><a href="#cb52-17" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb52-18"><a href="#cb52-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb52-19"><a href="#cb52-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb52-20"><a href="#cb52-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>),</span>
+<span id="cb52-21"><a href="#cb52-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>)</span>
+<span id="cb52-22"><a href="#cb52-22" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb52-23"><a href="#cb52-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-24"><a href="#cb52-24" aria-hidden="true" tabindex="-1"></a>c1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:98.0%"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Contribución de variables - Dimensión 1</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>c2 <span class="ot">&lt;-</span> <span class="fu">fviz_contrib</span>(mv,</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">choice =</span> <span class="st">"var"</span>, </span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">axes =</span> <span class="dv">1</span>, </span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">top =</span> <span class="dv">5</span>,</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>                     <span class="at">fill =</span> <span class="st">"white"</span>,</span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>                     <span class="at">color =</span> <span class="st">"darkblue"</span>,</span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>                     <span class="at">sort.val =</span> <span class="st">"asc"</span></span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>                   ) <span class="sc">+</span></span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Dimensión 1 - Contribución de variables"</span>,</span>
+<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">""</span></span>
+<span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb53-14"><a href="#cb53-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb53-15"><a href="#cb53-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb53-16"><a href="#cb53-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>),</span>
+<span id="cb53-17"><a href="#cb53-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>)</span>
+<span id="cb53-18"><a href="#cb53-18" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb53-19"><a href="#cb53-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-20"><a href="#cb53-20" aria-hidden="true" tabindex="-1"></a>c2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-12-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:98.0%"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Contribución de variables - Dimensión 2</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>c3 <span class="ot">&lt;-</span> <span class="fu">fviz_contrib</span>(mv,</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">choice =</span> <span class="st">"var"</span>, </span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">axes =</span> <span class="dv">2</span>, </span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">top =</span> <span class="dv">5</span>,</span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>                     <span class="at">fill =</span> <span class="st">"white"</span>,</span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>                     <span class="at">color =</span> <span class="st">"darkblue"</span>,</span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>                     <span class="at">sort.val =</span> <span class="st">"asc"</span></span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a>                   ) <span class="sc">+</span></span>
+<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb54-11"><a href="#cb54-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Dimensión 2 - Contribución de variables"</span>,</span>
+<span id="cb54-12"><a href="#cb54-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">""</span></span>
+<span id="cb54-13"><a href="#cb54-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb54-14"><a href="#cb54-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb54-15"><a href="#cb54-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb54-16"><a href="#cb54-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>),</span>
+<span id="cb54-17"><a href="#cb54-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>)</span>
+<span id="cb54-18"><a href="#cb54-18" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb54-19"><a href="#cb54-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-20"><a href="#cb54-20" aria-hidden="true" tabindex="-1"></a>c3</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-12-3.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:98.0%"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Panel izquierdo</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>lpanel <span class="ot">&lt;-</span> <span class="fu">c</span>(c1, c2, c3) <span class="sc">%&gt;%</span> </span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_grid</span>(</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">plotlist =</span> .,</span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">ncol =</span> <span class="dv">1</span>,</span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="st">"auto"</span>,</span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">rel_heights =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">1.2</span>, <span class="fl">1.2</span>)</span>
+<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Panel derecho: calidad de representación (Cos2)</span></span>
+<span id="cb55-11"><a href="#cb55-11" aria-hidden="true" tabindex="-1"></a>rpanel <span class="ot">&lt;-</span> ggplotify<span class="sc">::</span><span class="fu">as.ggplot</span>(<span class="sc">~</span> {</span>
+<span id="cb55-12"><a href="#cb55-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb55-13"><a href="#cb55-13" aria-hidden="true" tabindex="-1"></a>  pcainfo<span class="sc">$</span>cos2[, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>] <span class="sc">%&gt;%</span> </span>
+<span id="cb55-14"><a href="#cb55-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">corrplot</span>(</span>
+<span id="cb55-15"><a href="#cb55-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">is.corr =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb55-16"><a href="#cb55-16" aria-hidden="true" tabindex="-1"></a>      <span class="at">method =</span> <span class="st">"number"</span>,</span>
+<span id="cb55-17"><a href="#cb55-17" aria-hidden="true" tabindex="-1"></a>      <span class="at">type =</span> <span class="st">"full"</span>,</span>
+<span id="cb55-18"><a href="#cb55-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">tl.col =</span> <span class="st">"black"</span>,</span>
+<span id="cb55-19"><a href="#cb55-19" aria-hidden="true" tabindex="-1"></a>      <span class="at">tl.srt =</span> <span class="dv">45</span>,</span>
+<span id="cb55-20"><a href="#cb55-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">tl.cex =</span> <span class="fl">0.9</span>,</span>
+<span id="cb55-21"><a href="#cb55-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">number.cex =</span> <span class="fl">0.5</span>,</span>
+<span id="cb55-22"><a href="#cb55-22" aria-hidden="true" tabindex="-1"></a>      <span class="at">number.digits =</span> <span class="dv">1</span>,</span>
+<span id="cb55-23"><a href="#cb55-23" aria-hidden="true" tabindex="-1"></a>      <span class="at">cl.cex =</span> <span class="fl">0.7</span>,</span>
+<span id="cb55-24"><a href="#cb55-24" aria-hidden="true" tabindex="-1"></a>      <span class="at">cl.pos =</span> <span class="st">"r"</span>,</span>
+<span id="cb55-25"><a href="#cb55-25" aria-hidden="true" tabindex="-1"></a>      <span class="at">cl.align =</span> <span class="st">"r"</span>,</span>
+<span id="cb55-26"><a href="#cb55-26" aria-hidden="true" tabindex="-1"></a>      <span class="at">cl.ratio =</span> <span class="dv">4</span></span>
+<span id="cb55-27"><a href="#cb55-27" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb55-28"><a href="#cb55-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-29"><a href="#cb55-29" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb55-30"><a href="#cb55-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-31"><a href="#cb55-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Unir los gráficos</span></span>
+<span id="cb55-32"><a href="#cb55-32" aria-hidden="true" tabindex="-1"></a>grid <span class="ot">&lt;-</span> <span class="fu">c</span>(lpanel, rpanel) <span class="sc">%&gt;%</span> </span>
+<span id="cb55-33"><a href="#cb55-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_grid</span>(</span>
+<span id="cb55-34"><a href="#cb55-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">plotlist =</span> .,</span>
+<span id="cb55-35"><a href="#cb55-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">ncol =</span> <span class="dv">2</span>,</span>
+<span id="cb55-36"><a href="#cb55-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">""</span>, <span class="st">"d"</span>)</span>
+<span id="cb55-37"><a href="#cb55-37" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb55-38"><a href="#cb55-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-39"><a href="#cb55-39" aria-hidden="true" tabindex="-1"></a><span class="co"># Guardar gráfico</span></span>
+<span id="cb55-40"><a href="#cb55-40" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(</span>
+<span id="cb55-41"><a href="#cb55-41" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot =</span> grid,</span>
+<span id="cb55-42"><a href="#cb55-42" aria-hidden="true" tabindex="-1"></a>  <span class="at">filename =</span> <span class="st">"contribution.jpg"</span>,</span>
+<span id="cb55-43"><a href="#cb55-43" aria-hidden="true" tabindex="-1"></a>  <span class="at">units =</span> <span class="st">"cm"</span>,</span>
+<span id="cb55-44"><a href="#cb55-44" aria-hidden="true" tabindex="-1"></a>  <span class="at">width =</span> <span class="dv">28</span>,</span>
+<span id="cb55-45"><a href="#cb55-45" aria-hidden="true" tabindex="-1"></a>  <span class="at">height =</span> <span class="dv">36</span>,</span>
+<span id="cb55-46"><a href="#cb55-46" aria-hidden="true" tabindex="-1"></a>  <span class="at">dpi =</span> <span class="dv">300</span></span>
+<span id="cb55-47"><a href="#cb55-47" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb55-48"><a href="#cb55-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-49"><a href="#cb55-49" aria-hidden="true" tabindex="-1"></a>grid</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-12-4.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:98.0%"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
